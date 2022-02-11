@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 
-<?php include 'db.php';
-$query = 'SELECT * from tasks';
-// $results=$db->query($query); //oops style
-$results = mysqli_query($db, $query) //procedural style
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+include 'db.php';
+$db = new Database();
+$query = "SELECT * from items";
+$results = $db->db_num($query);
+// // $results=$db->query($query); //oops style
+// $results = mysqli_query($db, $query) //procedural style
 
 
 ?>
@@ -70,17 +74,15 @@ $results = mysqli_query($db, $query) //procedural style
           <tbody>
             <tr>
               <?php
-
-              // while ($row = $results->fetch_assoc()) {
               while ($row = mysqli_fetch_assoc($results)) :
                 // var_dump($row); //displays details about the variable
               ?>
 
 
                 <th scope="row"><?= $row["id"] ?></th>
-                <td><?= $row["task"] ?></td>
+                <td><?= $row["content"] ?></td>
                 <!-- <button type="button" class="btn btn-success " data-bs-target="#addTask">Add</button> -->
-                <td><a href="./update.php?id=<?=$row['id']?>"  class="btn updateBtn btn-success">Edit</a></td>
+                <td><a href="./updateList.php?id=<?= $row['id'] ?>" class="btn updateBtn btn-success">Edit</a></td>
                 <td><a href="./delete.php?id=<?= $row['id'] ?>" class="btn  btn-danger">Delete</a></td>
             </tr>
 
@@ -98,7 +100,7 @@ $results = mysqli_query($db, $query) //procedural style
 
   </div>
 
- 
+
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 </body>

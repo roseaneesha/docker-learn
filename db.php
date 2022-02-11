@@ -1,29 +1,54 @@
  <?php
-    // $dsn= 'mysql:127.0.0.1:3306;dbname=tasks';
-    // $username = 'root';
-    // $password = '';
-    
-    // try {
-    //     //code...
-    //     $db = new PDO($dsn,$username,$password);
-    //     echo 'connected';
-    // } catch (PDOException $e) {
-    //     //throw $th;
-    //     echo $e->getMessage();
-    // }
 
 
+    use Dotenv\Dotenv;
+    use Dotenv\Exception\InvalidPathException;
 
-    // $db= new Mysqli;
-    // $db->connect('localhost', 'root', '', 'todolist');
-    // if($db){
-    //     echo "success";
-    // }
-
-    $db=  mysqli_connect('localhost','root','','todolist');
-    if(!$db){
-        // echo"connection made";
-        echo "Connection error";
-
+    require_once __DIR__ . '/vendor/autoload.php';
+    $dotenv = Dotenv::createUnsafeImmutable(__DIR__);
+    $dotenv->load();
+    try {
+        $dotenv->load();
+    } catch (InvalidPathException $e) {
+        echo $e;
     }
-?> 
+    // echo getenv('HOST_LOCAL');
+    // echo var_dump($_ENV('HOST_DOCKER'));
+
+    class Database
+    {
+        private $user;
+        private $host;
+        private $password;
+        private $db;
+
+        public function __construct()
+        {
+            $this->connect();
+        }
+        private function connect()
+        {
+            // $this->host = 'db';
+            // $this->password = "MYSQL_ROOT_PASSWORD";
+            // $this->host = '192.168.56.1';
+            // $this->password = "";
+
+
+            $this->host = getenv('HOST_LOCAL');
+            $this->password = getenv('PASSWORD_LOCAL');
+            $this->user = getenv('DB_USER');
+            $this->db = getenv('DB_NAME');
+
+
+            $this->mysqli = new mysqli($this->host, $this->user,  $this->password, $this->db);
+            return $this->mysqli;
+        }
+
+        public function db_num($sql)
+        {
+            $res = $this->mysqli->query($sql);
+            return $res;
+        }
+    }
+
+    ?>
